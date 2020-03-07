@@ -102,7 +102,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <router-link to="/dashboard" class="nav-link active">
+            <router-link to="/dashboard" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -119,16 +119,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <router-link to="/profile" class="nav-link">
-                  <i class="far fa-user nav-icon"></i>
-                  <p>Profile</p>
+                <router-link to="/users" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Users</p>
                 </router-link>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a class="nav-link" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
                   <i class="fas fa-power-off nav-icon"></i>
-                  <p>Logout</p>
+                  {{ __('Logout') }}
                 </a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      @csrf
+                  </form>
               </li>
             </ul>
           </li>

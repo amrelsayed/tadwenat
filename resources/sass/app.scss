@@ -9,4 +9,8 @@
 
 // AdminLte
 @import '~admin-lte/dist/css/adminlte.css';
-@import '~admin-lte/plugins/fontawesome-free/css/all.css'
+@import '~admin-lte/plugins/fontawesome-free/css/all.css';
+
+[class*='sidebar-dark-'] .nav-treeview > .nav-item > .nav-link:hover, .router-link-active {
+	background: #6610f2;
+}
