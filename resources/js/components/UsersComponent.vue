@@ -118,11 +118,22 @@
             axios.get('api/users').then( ({ data }) => (this.users = data.data));
         },
         addUser() {
-          // Submit the form via a POST request
-          this.form.post('/api/users')
-            .then(({ data }) => { console.log(data) })
-            }
-        },
+            this.$Progress.start()
+            
+            this.form.post('/api/users')
+            
+            this.$Progress.finish()
+
+            $('#userModal').modal('hide');
+
+            Toast.fire({
+              icon: 'success',
+              title: 'User created successfully'
+            })
+
+            this.loadUsers();
+        }
+    },
         created() {
                 this.loadUsers();
             }
