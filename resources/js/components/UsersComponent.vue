@@ -120,18 +120,18 @@
         addUser() {
             this.$Progress.start()
             
-            this.form.post('/api/users')
-            
-            this.$Progress.finish()
+            this.form.post('/api/users').then(() => {
+                $('#userModal').modal('hide');
 
-            $('#userModal').modal('hide');
+                Toast.fire({
+                  icon: 'success',
+                  title: 'User created successfully'
+                })
 
-            Toast.fire({
-              icon: 'success',
-              title: 'User created successfully'
+                this.loadUsers();    
             })
 
-            this.loadUsers();
+            this.$Progress.finish();
         }
     },
         created() {

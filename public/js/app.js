@@ -2113,15 +2113,19 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addUser: function addUser() {
+      var _this2 = this;
+
       this.$Progress.start();
-      this.form.post('/api/users');
-      this.$Progress.finish();
-      $('#userModal').modal('hide');
-      Toast.fire({
-        icon: 'success',
-        title: 'User created successfully'
+      this.form.post('/api/users').then(function () {
+        $('#userModal').modal('hide');
+        Toast.fire({
+          icon: 'success',
+          title: 'User created successfully'
+        });
+
+        _this2.loadUsers();
       });
-      this.loadUsers();
+      this.$Progress.finish();
     }
   },
   created: function created() {
