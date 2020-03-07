@@ -16,6 +16,7 @@
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Type</th>
               <th>Created At</th>
               <th>Actions</th>
             </tr>
@@ -25,7 +26,8 @@
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
               <td> {{ user.email }} </td>
-              <td> {{ user.created_at }} </td>
+              <td> {{ user.type | capitalize }} </td>
+              <td> {{ user.created_at | humanDate }} </td>
               <td>
                   <a class="btn btn-info text-white"><i class="fa fa-edit"></i></a>
                   <a class="btn btn-danger text-white"><i class="fa fa-trash"></i></a>
