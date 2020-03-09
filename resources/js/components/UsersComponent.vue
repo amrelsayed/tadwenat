@@ -1,11 +1,36 @@
 <template>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+<!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Users</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Users</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+
   <div class="col-12">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Users</h3>
 
         <div class="card-tools">
-            <button class="btn btn-success" data-toggle="modal" data-target="#userModal">Add New</button>
+            <button @click="newModal" class="btn btn-success" data-toggle="modal" data-target="#userModal">Add New</button>
         </div>
       </div>
       <!-- /.card-header -->
@@ -29,8 +54,8 @@
               <td> {{ user.type | capitalize }} </td>
               <td> {{ user.created_at | humanDate }} </td>
               <td>
-                  <a class="btn btn-info text-white"><i class="fa fa-edit"></i></a>
-                  <a class="btn btn-danger text-white"><i class="fa fa-trash"></i></a>
+                  <button @click="editModal(user)" class="btn btn-info text-white"><i class="fa fa-edit"></i></button>
+                  <button @click="deleteUser(user.id)" class="btn btn-danger text-white"><i class="fa fa-trash"></i></button>
               </td>
             </tr>
           </tbody>
@@ -89,7 +114,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button :disabled="form.busy" type="submit" class="btn btn-primary">Save changes</button>
+        <button :disabled="form.busy" type="submit" class="btn btn-primary">Save</button>
 
       </div>
       </form>
@@ -97,23 +122,41 @@
   </div>
 </div>
 
-  </div>      
+  </div>
+  </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content --> 
+      </div>
+  <!-- /.content-wrapper -->
 </template>
 
 <script>
     export default {
         data () {
-        return {
-          users: {},
-          form: new Form({
-            name: '',
-            email: '',
-            password: '',
-            remember: false
-          })
-        }
-      },
+            return {
+              users: {},
+              form: new Form({
+                name: '',
+                email: '',
+                password: '',
+                type: '',
+                bio: '',
+                photo: ''
+              })
+            }
+        },
       methods: {
+        newModal() {
+            this.form.reset();
+            $('#userModal').modal('show');
+        },
+        editModal(user) {
+            this.form.reset();
+            this.form.fill(user);
+            $('#userModal').modal('show');
+        },
         loadUsers() {
             axios.get('api/users').then( ({ data }) => (this.users = data.data));
         },
@@ -132,10 +175,38 @@
             })
 
             this.$Progress.finish();
+        },
+        deleteUser(id) {
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+
+                this.form.delete('api/users/' + id).then(() => {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'User has been deleted'
+                    });
+
+                    this.loadUsers();
+                }).catch(() => {
+                     Toast.fire({
+                        icon: 'error',
+                        title: 'Something went wrong'
+                    });
+                });
+            }
+            })
         }
     },
-        created() {
-                this.loadUsers();
-            }
-        }
+    created() {
+        this.loadUsers();
+    }
+}
 </script>
