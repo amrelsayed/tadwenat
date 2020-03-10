@@ -2126,8 +2126,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      editMode: false,
       users: {},
       form: new Form({
+        id: '',
         name: '',
         email: '',
         password: '',
@@ -2139,10 +2141,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     newModal: function newModal() {
+      this.editMode = false;
       this.form.reset();
       $('#userModal').modal('show');
     },
     editModal: function editModal(user) {
+      this.editMode = true;
       this.form.reset();
       this.form.fill(user);
       $('#userModal').modal('show');
@@ -2167,11 +2171,41 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         _this2.loadUsers();
+      })["catch"](function () {
+        _this2.$Progress.fail();
+
+        Toast.fire({
+          icon: 'error',
+          title: 'Something went wrong'
+        });
+      });
+      this.$Progress.finish();
+    },
+    editUser: function editUser() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.put('api/users/' + this.form.id).then(function (data) {
+        $('#userModal').modal('hide');
+        console.log(data);
+        Toast.fire({
+          icon: 'success',
+          title: 'User updated successfully'
+        });
+
+        _this3.loadUsers();
+      })["catch"](function () {
+        _this3.$Progress.fail();
+
+        Toast.fire({
+          icon: 'error',
+          title: 'Something went wrong'
+        });
       });
       this.$Progress.finish();
     },
     deleteUser: function deleteUser(id) {
-      var _this3 = this;
+      var _this4 = this;
 
       Swal.fire({
         title: 'Are you sure?',
@@ -2183,13 +2217,13 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Yes, delete it!'
       }).then(function (result) {
         if (result.value) {
-          _this3.form["delete"]('api/users/' + id).then(function () {
+          _this4.form["delete"]('api/users/' + id).then(function () {
             Toast.fire({
               icon: 'success',
               title: 'User has been deleted'
             });
 
-            _this3.loadUsers();
+            _this4.loadUsers();
           })["catch"](function () {
             Toast.fire({
               icon: 'error',
@@ -59469,7 +59503,7 @@ var render = function() {
                           on: {
                             submit: function($event) {
                               $event.preventDefault()
-                              return _vm.addUser($event)
+                              _vm.editMode ? _vm.editUser() : _vm.addUser()
                             },
                             keydown: function($event) {
                               return _vm.form.onKeydown($event)

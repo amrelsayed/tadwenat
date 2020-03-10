@@ -75,7 +75,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form @submit.prevent="addUser" @keydown="form.onKeydown($event)">
+      <form @submit.prevent="editMode ? editUser() : addUser()" @keydown="form.onKeydown($event)">
       <div class="modal-body">
             <div class="form-group">
               <input v-model="form.name" type="text" name="name"
@@ -136,23 +136,27 @@
     export default {
         data () {
             return {
-              users: {},
-              form: new Form({
-                name: '',
-                email: '',
-                password: '',
-                type: '',
-                bio: '',
-                photo: ''
-              })
+                editMode: false,
+                users: {},
+                form: new Form({
+                    id: '',
+                    name: '',
+                    email: '',
+                    password: '',
+                    type: '',
+                    bio: '',
+                    photo: ''
+                })
             }
         },
       methods: {
         newModal() {
+            this.editMode = false;
             this.form.reset();
             $('#userModal').modal('show');
         },
         editModal(user) {
+            this.editMode = true;
             this.form.reset();
             this.form.fill(user);
             $('#userModal').modal('show');
@@ -163,7 +167,8 @@
         addUser() {
             this.$Progress.start()
             
-            this.form.post('/api/users').then(() => {
+            this.form.post('/api/users')
+            .then(() => {
                 $('#userModal').modal('hide');
 
                 Toast.fire({
@@ -171,8 +176,41 @@
                   title: 'User created successfully'
                 })
 
-                this.loadUsers();    
+                this.loadUsers();   
             })
+            .catch(() => {
+                this.$Progress.fail();
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong'
+                });
+            });
+
+            this.$Progress.finish();
+        },
+        editUser() {
+            this.$Progress.start();
+            this.form.put('api/users/' + this.form.id)
+            .then((data) => {
+                $('#userModal').modal('hide');
+                console.log(data);
+                
+                Toast.fire({
+                  icon: 'success',
+                  title: 'User updated successfully'
+                })
+
+                this.loadUsers();
+            })
+            .catch(() => {
+                this.$Progress.fail();
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong'
+                });
+            });
 
             this.$Progress.finish();
         },
@@ -209,4 +247,5 @@
         this.loadUsers();
     }
 }
+
 </script>
