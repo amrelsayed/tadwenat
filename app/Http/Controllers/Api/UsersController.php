@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class UsersController extends Controller
 {
@@ -43,12 +44,41 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function profile()
+    {
+        return auth()->user();
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $this->validate($request, [
+            'name' => 'required|string|max:191',
+            'email' => 'required|email|max:191|unique:users,email,' . $user->id,
+            'password' => 'sometimes|min:6|max:191',
+        ]);
+
+        if ($request->photo != $user->photo) {
+            $name = time() . '.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
+
+            \Image::make($request->photo)->save(public_path('img/profile/'.$name));
+
+            // delete old photo
+            $old_photo = public_path('img/profile/') . $user->photo;
+            if (file_exists($old_photo))
+                @unlink($old_photo);
+
+            $request->merge(['photo' => $name]);
+        }
+
+        if (! empty($request->password)) {
+            $request->merge(['password' => Hash::make($request['password'])]);
+        }
+
+        $user->update($request->all());
+    }
+
     public function show($id)
     {
         //
@@ -68,7 +98,7 @@ class UsersController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'email' => 'required|email|max:191|unique:users,email,' . $user->id,
-            'password' => 'required|string|min:6|max:191',
+            'password' => 'sometimes|string|min:6|max:191',
         ]);
 
         $user->update($request->all());

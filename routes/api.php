@@ -21,4 +21,6 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
 	Route::apiResources([
 		'users' => 'UsersController',
 	]);
+	Route::get('profile', 'UsersController@profile');
+	Route::put('profile', 'UsersController@updateProfile');
 });

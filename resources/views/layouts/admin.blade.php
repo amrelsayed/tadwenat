@@ -124,7 +124,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>Users</p>
                 </router-link>
               </li>
-              <li class="nav-item">
+               <li class="nav-item">
+                <router-link to="/profile" class="nav-link">
+                  <i class="fas fa-user nav-icon"></i>
+                  <p>Profile</p>
+                </router-link>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
                 <a class="nav-link" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
                                   document.getElementById('logout-form').submit();">
@@ -135,8 +143,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       @csrf
                   </form>
               </li>
-            </ul>
-          </li>
           
         </ul>
       </nav>
@@ -144,7 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.sidebar -->
   </aside>
-
+    
     <!-- render vue views -->
     <router-view></router-view>
     <vue-progress-bar></vue-progress-bar>

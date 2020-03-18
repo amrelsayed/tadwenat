@@ -194,7 +194,6 @@
             this.form.put('api/users/' + this.form.id)
             .then((data) => {
                 $('#userModal').modal('hide');
-                console.log(data);
                 
                 Toast.fire({
                   icon: 'success',
@@ -202,6 +201,8 @@
                 })
 
                 this.loadUsers();
+
+                this.$Progress.finish();
             })
             .catch(() => {
                 this.$Progress.fail();
