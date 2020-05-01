@@ -2146,6 +2146,9 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    getProfilePhoto: function getProfilePhoto() {
+      return this.form.photo.length > 200 ? this.form.photo : "img/profile/" + this.form.photo;
+    },
     updateProfile: function updateProfile() {
       var _this2 = this;
 
@@ -59593,7 +59596,7 @@ var render = function() {
                   _c("img", {
                     staticClass: "profile-user-img img-fluid img-circle",
                     attrs: {
-                      src: "img/profile/" + _vm.form.photo,
+                      src: _vm.getProfilePhoto(),
                       alt: "User profile picture"
                     }
                   })
@@ -75916,8 +75919,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/amr/projects/tadwenat/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/amr/projects/tadwenat/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\tadwenat\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\tadwenat\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
